@@ -41,3 +41,21 @@ if __name__ == "__main__":
     for user in batch_processing(5):
         print(user)
 
+
+
+
+def get_all_users():
+    connection = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='your_password',
+        database='ALX_prodev'
+    )
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM user_data")
+    data = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return data
+
+
