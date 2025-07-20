@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-#!/usr/bin/env python3
-"""
-Unit and integration tests for client module.
-"""
+"""Unit and integration tests for client module."""
 
 import unittest
 from unittest.mock import patch, PropertyMock
