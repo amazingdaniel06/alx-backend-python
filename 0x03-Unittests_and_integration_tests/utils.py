@@ -1,24 +1,28 @@
 #!/usr/bin/env python3
-from typing import Any, Mapping, Sequence, Callable
+"""
+Utilities module with JSON fetching and memoization.
+"""
+
+from typing import Mapping, Sequence, Any, Dict
 import requests
 
 
 def access_nested_map(nested_map: Mapping, path: Sequence) -> Any:
-    """Access a nested map with a sequence of keys."""
+    """Access nested map by following path."""
     for key in path:
         nested_map = nested_map[key]
     return nested_map
 
 
-def get_json(url: str) -> Any:
-    """GET request and return JSON content."""
+def get_json(url: str) -> Dict:
+    """Fetch JSON from a given URL."""
     response = requests.get(url)
     return response.json()
 
 
-def memoize(method: Callable) -> Callable:
-    """Decorator to cache method output."""
-    attr_name = "_memoized_" + method.__name__
+def memoize(method):
+    """Decorator to cache method results."""
+    attr_name = f"_memoized_{method.__name__}"
 
     def wrapper(self):
         if not hasattr(self, attr_name):
