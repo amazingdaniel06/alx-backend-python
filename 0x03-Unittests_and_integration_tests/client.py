@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """
-This module defines a GithubOrgClient class that interacts with GitHub's API.
+Client module for interacting with GitHub organization data.
 """
 
-from typing import List, Dict
+from typing import List, Dict, Optional
 from utils import get_json, memoize
 
 
 class GithubOrgClient:
-    """Client to fetch GitHub organization information."""
+    """
+    GithubOrgClient class to interact with GitHub API.
+    """
 
     ORG_URL = "https://api.github.com/orgs/{}"
 
@@ -23,21 +25,24 @@ class GithubOrgClient:
 
     @property
     def _public_repos_url(self) -> str:
-        """Get the URL of public repositories from organization info."""
+        """Get public repositories URL from organization data."""
         return self.org.get("repos_url")
 
-    def public_repos(self, license: str = None) -> List[str]:
-        """Fetch list of public repositories, optionally filter by license."""
+    def public_repos(self, license: Optional[str] = None) -> List[str]:
+        """
+        Get list of public repositories. Optionally filter by license.
+        """
         repos = get_json(self._public_repos_url)
         if license is None:
             return [repo.get("name") for repo in repos]
         return [
-            repo.get("name") for repo in repos
+            repo.get("name")
+            for repo in repos
             if self.has_license(repo, license)
         ]
 
     @staticmethod
     def has_license(repo: Dict, license_key: str) -> bool:
-        """Check if repo has a specific license."""
+        """Check if a repository has a specific license."""
         license_info = repo.get("license")
-        return license_info and license_info.get("key") == license_key
+        return bool(license_info and license_info.get("key") == license_key)
