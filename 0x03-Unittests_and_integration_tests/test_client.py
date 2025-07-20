@@ -1,9 +1,19 @@
 #!/usr/bin/env python3
+#!/usr/bin/env python3
+"""
+Unit and integration tests for client module.
+"""
+
 import unittest
 from unittest.mock import patch, PropertyMock
 from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
-from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
+from fixtures import (
+    org_payload,
+    repos_payload,
+    expected_repos,
+    apache2_repos
+)
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -51,15 +61,29 @@ class TestGithubOrgClient(unittest.TestCase):
             result = client.public_repos()
             self.assertEqual(result, ["repo1", "repo2"])
             mock_repos_url.assert_called_once()
-            mock_get_json.assert_called_once_with("http://test.com/repos")
+            mock_get_json.assert_called_once_with(
+                "http://test.com/repos"
+            )
 
     @parameterized.expand([
-        ("has_license", {"license": {"key": "my_license"}}, "my_license", True),
-        ("no_license", {"license": {"key": "other_license"}}, "my_license", False),
+        (
+            "has_license",
+            {"license": {"key": "my_license"}},
+            "my_license",
+            True
+        ),
+        (
+            "no_license",
+            {"license": {"key": "other_license"}},
+            "my_license",
+            False
+        ),
     ])
     def test_has_license(self, name, repo, license_key, expected):
         """Test has_license returns correct boolean."""
-        self.assertEqual(GithubOrgClient.has_license(repo, license_key), expected)
+        self.assertEqual(
+            GithubOrgClient.has_license(repo, license_key), expected
+        )
 
 
 @parameterized_class([
@@ -81,9 +105,13 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
         def side_effect(url):
             if url.endswith('orgs/test_org'):
-                return unittest.mock.Mock(json=lambda: cls.org_payload)
+                return unittest.mock.Mock(
+                    json=lambda: cls.org_payload
+                )
             if url.endswith('repos'):
-                return unittest.mock.Mock(json=lambda: cls.repos_payload)
+                return unittest.mock.Mock(
+                    json=lambda: cls.repos_payload
+                )
             return unittest.mock.Mock()
 
         cls.mock_get.side_effect = side_effect
@@ -96,7 +124,10 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     def test_public_repos(self):
         """Test public_repos returns expected repos."""
         client = GithubOrgClient("test_org")
-        self.assertEqual(client.public_repos(), self.expected_repos)
+        self.assertEqual(
+            client.public_repos(),
+            self.expected_repos
+        )
 
     def test_public_repos_with_license(self):
         """Test public_repos filters by license."""
