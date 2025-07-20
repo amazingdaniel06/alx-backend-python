@@ -6,7 +6,9 @@ Unit tests for the utils module.
 import unittest
 from parameterized import parameterized
 from unittest.mock import patch, Mock
-from utils import access_nested_map, get_json, memoize
+from 0x03_Unittests_and_integration_tests.utils import (
+    access_nested_map, get_json, memoize
+)
 
 
 class TestAccessNestedMap(unittest.TestCase):
@@ -39,7 +41,7 @@ class TestGetJson(unittest.TestCase):
         ("example_com", "http://example.com", {"payload": True}),
         ("holberton_io", "http://holberton.io", {"payload": False}),
     ])
-    @patch('0x03-Unittests_and_integration_tests.utils.requests.get')
+    @patch('0x03_Unittests_and_integration_tests.utils.requests.get')
     def test_get_json(self, name, url, payload, mock_get):
         """Test that get_json returns expected JSON response."""
         mock_get.return_value = Mock(json=Mock(return_value=payload))
