@@ -39,7 +39,7 @@ class TestGetJson(unittest.TestCase):
         ("example_com", "http://example.com", {"payload": True}),
         ("holberton_io", "http://holberton.io", {"payload": False}),
     ])
-    @patch('utils.requests.get')
+    @patch('0x03-Unittests_and_integration_tests.utils.requests.get')
     def test_get_json(self, name, url, payload, mock_get):
         """Test that get_json returns expected JSON response."""
         mock_get.return_value = Mock(json=Mock(return_value=payload))
