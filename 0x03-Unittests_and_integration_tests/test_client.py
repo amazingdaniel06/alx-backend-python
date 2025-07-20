@@ -95,11 +95,11 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         cls.mock_get = cls.get_patcher.start()
 
         def side_effect(url):
-            if url.endswith('orgs/test_org'):
+            if "orgs/test_org" in url:
                 return unittest.mock.Mock(
                     json=lambda: cls.org_payload
                 )
-            if url.endswith('repos'):
+            if "repos" in url:
                 return unittest.mock.Mock(
                     json=lambda: cls.repos_payload
                 )
