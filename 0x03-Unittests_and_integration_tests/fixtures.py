@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Fixtures for integration tests."""
+"""
+Fixtures for integration tests of GithubOrgClient.
+"""
 
 org_payload = {
     "repos_url": "https://api.github.com/orgs/test_org/repos",
