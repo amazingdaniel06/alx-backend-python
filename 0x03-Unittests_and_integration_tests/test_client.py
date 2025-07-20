@@ -62,25 +62,18 @@ class TestGithubOrgClient(unittest.TestCase):
                 "http://test.com/repos"
             )
 
-    @parameterized.expand([
-        (
-            "has_license",
-            {"license": {"key": "my_license"}},
-            "my_license",
-            True
-        ),
-        (
-            "no_license",
-            {"license": {"key": "other_license"}},
-            "my_license",
-            False
-        ),
+       @parameterized.expand([
+        ({"license": {"key": "my_license"}}, "my_license", True),
+        ({"license": {"key": "other_license"}}, "my_license", False),
+        ({}, "my_license", False),
     ])
-    def test_has_license(self, name, repo, license_key, expected):
-        """Test has_license returns correct boolean."""
+    def test_has_license(self, repo, license_key, expected):
+        """Test has_license returns correct boolean outcome."""
         self.assertEqual(
-            GithubOrgClient.has_license(repo, license_key), expected
+            GithubOrgClient.has_license(repo, license_key),
+            expected
         )
+
 
 
 @parameterized_class([
