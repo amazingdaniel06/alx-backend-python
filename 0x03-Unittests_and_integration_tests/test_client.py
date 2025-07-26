@@ -2,10 +2,16 @@
 """
 Unit and integration tests for GithubOrgClient class.
 
-This module contains both unit and integration tests for the
-client.GithubOrgClient class. It uses patching and parameterized
-testing to validate functionality, HTTP behavior, and licensing.
+This module tests the GithubOrgClient class defined in client.py.
+It includes:
+- Unit tests for methods and properties
+- Integration tests simulating GitHub API responses
+- Parameterized and mocked testing strategies
+
+Each test ensures that API calls, responses, and filtering logic
+in GithubOrgClient work as expected.
 """
+
 import unittest
 from unittest.mock import patch, PropertyMock
 from parameterized import parameterized, parameterized_class
