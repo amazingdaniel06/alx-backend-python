@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+"""
+Unit and integration tests for GithubOrgClient class.
+
+This module contains both unit and integration tests for the
+client.GithubOrgClient class. It uses patching and parameterized
+testing to validate functionality, HTTP behavior, and licensing.
+"""
 import unittest
 from unittest.mock import patch, PropertyMock
 from parameterized import parameterized, parameterized_class
