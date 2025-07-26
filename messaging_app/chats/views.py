@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
 from .permissions import IsParticipantOfConversation
+from rest_framework.exceptions import PermissionDenied
 
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
@@ -20,18 +21,30 @@ class ConversationViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
+
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    permission_classes = [IsParticipantOfConversation]
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['sent_at']
-    ordering = ['-sent_at']
+    permission_classes = [IsAuthenticated, IsParticipantOfConversation]
 
     def perform_create(self, serializer):
-        serializer.save(sender=self.request.user)
-     def get_queryset(self):
-        return Message.objects.filter(
-            conversation__participants=self.request.user
-        )
+        conversation_id = self.request.data.get('conversation_id')
+        if not conversation_id:
+            raise PermissionDenied("conversation_id is required.")
+
+        try:
+            conversation = Conversation.objects.get(id=conversation_id)
+        except Conversation.DoesNotExist:
+            raise PermissionDenied("Conversation does not exist.")
+
+        if self.request.user not in conversation.participants.all():
+            return Response({"detail": "Forbidden"},
+                            status=status.HTTP_403_FORBIDDEN)
+
+        serializer.save(sender=self.request.user, conversation=conversation)
+
+    def get_queryset(self):
+        """
+        Return only messages from conversations the user participates in.
+        """
+        return Message.objects.filter(conversation__participants=self.request.user)
