@@ -101,7 +101,7 @@ class MockResponse:
         return self._json_data
 
 
-@parameterized_class([
+ @parameterized_class([
     {
         "org_payload": ORG_PAYLOAD,
         "repos_payload": REPOS_PAYLOAD,
