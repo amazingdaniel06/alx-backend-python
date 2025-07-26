@@ -6,7 +6,10 @@ from client import GithubOrgClient
 
 
 # Fixtures embedded directly
-ORG_PAYLOAD = {"login": "testorg", "repos_url": "https://api.github.com/orgs/testorg/repos"}
+ORG_PAYLOAD = {
+    "login": "testorg",
+    "repos_url": "https://api.github.com/orgs/testorg/repos"
+}
 REPOS_PAYLOAD = [
     {"name": "repo1", "license": {"key": "apache-2.0"}},
     {"name": "repo2", "license": {"key": "other-license"}},
@@ -29,23 +32,33 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.return_value = test_payload
 
         client = GithubOrgClient(org_name)
-        self.assertEqual(client.org, test_payload)
-        mock_get_json.assert_called_once_with(f"https://api.github.com/orgs/{org_name}")
+        result = client.org
+
+        expected_url = f"https://api.github.com/orgs/{org_name}"
+        mock_get_json.assert_called_once_with(expected_url)
+        self.assertEqual(result, test_payload)
 
     def test_public_repos_url(self):
         """Test _public_repos_url returns repos_url from org"""
-        with patch('client.GithubOrgClient.org', new_callable=PropertyMock) as mock_org:
+        with patch(
+            'client.GithubOrgClient.org', new_callable=PropertyMock
+        ) as mock_org:
             mock_org.return_value = ORG_PAYLOAD
 
             client = GithubOrgClient("testorg")
-            self.assertEqual(client._public_repos_url, ORG_PAYLOAD["repos_url"])
+            result = client._public_repos_url
+
+            self.assertEqual(result, ORG_PAYLOAD["repos_url"])
 
     @patch('client.get_json')
     def test_public_repos(self, mock_get_json):
         """Test public_repos returns correct list of repo names"""
         mock_get_json.return_value = REPOS_PAYLOAD
 
-        with patch('client.GithubOrgClient._public_repos_url', new_callable=PropertyMock) as mock_url:
+        with patch(
+            'client.GithubOrgClient._public_repos_url',
+            new_callable=PropertyMock
+        ) as mock_url:
             mock_url.return_value = ORG_PAYLOAD["repos_url"]
 
             client = GithubOrgClient("testorg")
@@ -66,7 +79,6 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(result, expected)
 
 
-# Mock response helper for integration tests
 class MockResponse:
     """Mocked response for requests.get().json()"""
     def __init__(self, json_data):
