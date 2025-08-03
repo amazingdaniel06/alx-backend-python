@@ -10,13 +10,13 @@ class Message(models.Model):
     edited = models.BooleanField(default=False)
     parent_message = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
 
+   # ✅ Add the custom manager
+    unread = UnreadMessagesManager()
+    
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    message = models.ForeignKey(Message, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     seen = models.BooleanField(default=False)
-
-class MessageHistory(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='history')
     old_content = models.TextField()
     edited_at = models.DateTimeField(auto_now_add=True)
