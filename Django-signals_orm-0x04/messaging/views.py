@@ -1,3 +1,4 @@
+from django.views.decorators.cache import cache_page
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -7,6 +8,7 @@ from .models import Message
 from django.contrib.auth.models import User
 import json
 
+@method_decorator(cache_page(60), name='dispatch')
 @method_decorator(csrf_exempt, name='dispatch')
 class SendMessageView(View):
     @method_decorator(login_required)
