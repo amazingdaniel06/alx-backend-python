@@ -14,6 +14,7 @@ class SendMessageView(View):
         data = json.loads(request.body)
         receiver_id = data.get("receiver")
         content = data.get("content")
+         .only('id', 'sender', 'content', 'timestamp')
 
           messages = Message.unread.unread_for_user(request.user)
 
