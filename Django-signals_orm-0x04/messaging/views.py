@@ -15,6 +15,8 @@ class SendMessageView(View):
         receiver_id = data.get("receiver")
         content = data.get("content")
 
+          messages = Message.unread.unread_for_user(request.user)
+
         try:
             receiver = User.objects.get(pk=receiver_id)
         except User.DoesNotExist:
