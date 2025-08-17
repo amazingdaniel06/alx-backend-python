@@ -1,1 +1,14 @@
+#!/bin/bash
+# kurbeScript - Setup and verify local Kubernetes cluster using Minikube
 
+# Exit on error
+set -e
+
+echo "🚀 Starting Minikube cluster..."
+minikube start --driver=docker
+
+echo "🔍 Checking cluster info..."
+kubectl cluster-info
+
+echo "📦 Checking pods in all namespaces..."
+kubectl get pods -A
