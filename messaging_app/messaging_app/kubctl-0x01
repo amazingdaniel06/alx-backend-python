@@ -1,0 +1,16 @@
+#!/bin/bash
+# kubctl-0x01 - Scale Django app and monitor usage
+
+set -e
+
+echo "📈 Scaling Django deployment to 3 replicas..."
+kubectl scale deployment django-messaging-app --replicas=3
+
+echo "🔍 Checking running pods..."
+kubectl get pods -l app=django-messaging
+
+echo "⚡ Load testing with wrk..."
+wrk -t2 -c50 -d30s http://$(minikube ip):$(kubectl get svc django-messaging-service -o=jsonpath='{.spec.ports[0].nodePort}')/
+
+echo "📊 Monitoring resource usage..."
+kubectl top pods
